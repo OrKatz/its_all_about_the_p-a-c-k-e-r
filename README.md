@@ -9,3 +9,4 @@ required named arguments:
 --results R [R ...]  results file path is required
 
 --files F [F ...]    path for scanned files or file with list of URLs is required (depends on the usage mode, "local_scan" will require folder path, "urls_scan" will require file with list of URLs and "single_url_scan" will include URL as an input)
+ 
