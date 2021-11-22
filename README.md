@@ -2,6 +2,7 @@
 Javscript obfuscation packers detection
 
 required named arguments:
+
 --mode M [M ...]     Javascript obfuscator mode is required options are -
                      local_scan/urls_scan/single_url_scan
 
