@@ -1,5 +1,7 @@
 # its_all_about_the_p-a-c-k-e-r
 Javscript obfuscation packers detection
+In order to test detection use pytohn with the following attributes:  python js_obfuscator.py --mode local_scan --files test/ --results results.txt
+
 
 required named arguments:
 
