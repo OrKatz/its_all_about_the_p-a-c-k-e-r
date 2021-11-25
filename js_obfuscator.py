@@ -165,18 +165,15 @@ if __name__ == "__main__":
     errors_file = open(config.errors_file, 'w')
     args = config.arguments_config()
     if args.mode[0] == 'urls_scan':
-        if (os.path.exists(args.files[0])) and (os.path.exists(args.results[0])):
+        if os.path.exists(args.files[0]):
             main(args.mode[0], args.files[0], args.results[0])
         else:
-            print('The file with urls or results path specified does not exist')
+            print('The file with urls path specified does not exist')
     elif args.mode[0] == 'local_scan':
-        if (os.path.isdir(args.files[0])) and (os.path.exists(args.results[0])):
+        if os.path.isdir(args.files[0]):
             main(args.mode[0], args.files[0], args.results[0])
         else:
-            print('The files or results path specified does not exist')
+            print('The files path specified does not exist')
     elif args.mode[0] == 'single_url_scan':
-        if os.path.exists(args.results[0]):
-            main(args.mode[0], args.files[0], args.results[0])
-        else:
-            print('The results path specified does not exist')
-            #main(config.default_mode, config.default_files_scan_path, config.default_results_file)
+
+        main(args.mode[0], args.files[0], args.results[0])
