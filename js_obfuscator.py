@@ -7,9 +7,11 @@ import packers_signatures
 import features_collection
 import config
 
+
 def errors_prints(log_type, log):
     """writing errors to log file"""
     errors_file.write(str("{}: {} \n").format(log_type, log))
+
 
 def detection_print(url, log):
     """Printing detections"""
@@ -17,6 +19,7 @@ def detection_print(url, log):
     for i in log:
         if log[i] != 'no_obfuscation':
             print("{} - True".format(i))
+
 
 def check_file(url, body):
     """Going over file to collect features and execute obfuscation detection"""
@@ -26,8 +29,7 @@ def check_file(url, body):
 
     'extracting all JS codes from file'
     if url.endswith(".js"):
-        js_code = []
-        js_code.append(body)
+        js_code = [body]
     else:
         js_code = soup.find_all("script")
 
@@ -88,11 +90,13 @@ def check_file(url, body):
             list_js_features.append(is_eval_unescape)
 
             list_file_js_features.append(list_js_features)
-            if (is_aes_ctr != "no_obfuscation") or (is_eval_unescape != "no_obfuscation") or (is_munger != "no_obfuscation") or (is_kaktys != "no_obfuscation") or (is_obfuscation != "no_obfuscation"):
-                detection_print(url, {'is_aes_ctr': is_aes_ctr, 'is_eval_unescape': is_eval_unescape, 'is_munger': is_munger, 'is_kaktys': is_kaktys, 'is_obfuscation': is_obfuscation})
+            if (is_aes_ctr != "no_obfuscation") or (is_eval_unescape != "no_obfuscation") or (is_munger != "no_obfuscation") or (
+                    is_kaktys != "no_obfuscation") or (is_obfuscation != "no_obfuscation"):
+                detection_print(url, {'is_aes_ctr': is_aes_ctr, 'is_eval_unescape': is_eval_unescape, 'is_munger': is_munger, 'is_kaktys': is_kaktys,
+                                      'is_obfuscation': is_obfuscation})
 
         except Exception as e:
-            errors_prints(config.error_types['error'], e)
+            errors_prints(config.ERROR_TYPES['error'], e)
             pass
     return list_file_js_features
 
@@ -116,9 +120,9 @@ def urls_scan(file_urls, results_file):
             results.write(str(check_file(url, file_content)) + "\n")
 
         except Exception as e:  # except KeyError:
-            errors_prints(str(url_numerator) + " " + config.error_types['url'], url)
-            errors_prints(config.error_types['message'], "error on scan return value")
-            errors_prints(config.error_types['error'], e)
+            errors_prints(str(url_numerator) + " " + config.ERROR_TYPES['url'], url)
+            errors_prints(config.ERROR_TYPES['message'], "error on scan return value")
+            errors_prints(config.ERROR_TYPES['error'], e)
             results.write("[{}, \"error_in_scan\"]\n".format(url))
             pass
 
@@ -128,7 +132,7 @@ def scan_files(file_path, results_file):
     file_numerator = 0
     try:
         file_numerator = file_numerator + 1
-        results = open(results_file,'w')
+        results = open(results_file, 'w')
         files_list = []
         for filename in os.listdir(file_path):
             if filename.endswith('.js'):
@@ -141,9 +145,9 @@ def scan_files(file_path, results_file):
                 results.write(str(check_file(os.path.join(file_path, file_name), file_data)) + "\n")
 
     except Exception as e:  # except KeyError:
-        errors_prints(str(file_numerator) + " " + config.error_types['url'], filename)
-        errors_prints(config.error_types['message'], "error on scan return value")
-        errors_prints(config.error_types['error'], e)
+        errors_prints(str(file_numerator) + " " + config.ERROR_TYPES['url'], filename)
+        errors_prints(config.ERROR_TYPES['message'], "error on scan return value")
+        errors_prints(config.ERROR_TYPES['error'], e)
         pass
 
 
@@ -154,7 +158,7 @@ def main(mode, files_scan_path="", results_file=""):
     elif mode == 'local_scan':
         scan_files(files_scan_path, results_file)
     elif mode == 'single_url_scan':
-        #since the input is single url files_scan_path is being rapped by list
+        # since the input is single url files_scan_path is being rapped by list
         urls_scan([files_scan_path], results_file)
     else:
         print("unknown mode!!!")
@@ -162,7 +166,7 @@ def main(mode, files_scan_path="", results_file=""):
 
 
 if __name__ == "__main__":
-    errors_file = open(config.errors_file, 'w')
+    errors_file = open(config.ERRORS_FILE, 'w')
     args = config.arguments_config()
     if args.mode[0] == 'urls_scan':
         if os.path.exists(args.files[0]):

@@ -22,7 +22,7 @@ def check_identifier_hex(x):
 
 
 def collect_func_var_names(parsed_js):
-    x = re.findall('\'type\'\:\s?\'([^\']+)\', \'name\'\:\s?\'([^\']+)\'', str(parsed_js), re.DOTALL)
+    x = re.findall('\'type\'\:\s?\'([^\']+)\', \'name\'\:\s?\'([^\']+)\'', str(parsed_js), re.DOTALL)  # TODO: Change the regex to unescaped one
     return x
 
 
