@@ -1,5 +1,5 @@
 import re
-
+COLLECT_VARS_AND_FUNC = "'type':\s+u'([^']+)', 'name':\su'([^']+)'"
 
 def list_unique_identifiers(identifiers):
     js_identifiers = []
@@ -22,7 +22,11 @@ def check_identifier_hex(x):
 
 
 def collect_func_var_names(parsed_js):
-    x = re.findall('\'type\'\:\s?\'([^\']+)\', \'name\'\:\s?\'([^\']+)\'', str(parsed_js), re.DOTALL)  # TODO: Change the regex to unescaped one
+    try:
+        x = re.findall(COLLECT_VARS_AND_FUNC, str(parsed_js), re.DOTALL)
+    except Exception as e:
+        print(e)
+        return None
     return x
 
 

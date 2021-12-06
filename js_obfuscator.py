@@ -41,51 +41,51 @@ def check_file(url, body):
     'Going over all file JS codes'
     for i in js_code:
         try:
-            'All features for a single JS code (one file can contains numerous codes of JS)'
+            #All features for a single JS code (one file can contains numerous codes of JS)
             list_js_features = []
-            'When file is HTML need to remove the <script> tags'
+            #When file is HTML need to remove the <script> tags
             if url.endswith(".js"):
                 parsed_js = parse(i)
             else:
                 parsed_js = parse(features_collection.remove_html_tags(i))
-            'store JS hash value'
+            #store JS hash value
             list_js_features.append(hashlib.sha256(i.encode('utf-8')).hexdigest())
-            'collect all vars and func names'
+            #collect all vars and func names
             func_var_names_list = features_collection.collect_func_var_names(parsed_js)
-            'collect hash of the AST declaration'
+            #collect hash of the AST declaration
             declarations_list = features_collection.js_blocks_declarations(parsed_js)
-            'store hash of the AST declaration'
+            #store hash of the AST declaration
             list_js_features.append(hashlib.sha256('_'.join(declarations_list).encode('utf-8')).hexdigest())
-            'collect unique vars and func names (identifiers)'
+            #collect unique vars and func names (identifiers)
             identifiers = features_collection.list_unique_identifiers(func_var_names_list)
-            'push number of unique vars and func names (identifiers)'
+            #push number of unique vars and func names (identifiers)
             list_js_features.append(len(identifiers))
-            'push number of identifiers starting with _0x'
+            #push number of identifiers starting with _0x
             list_js_features.append(features_collection.number_of_0x_identifier(identifiers))
-            'push number of identifiers hex value'
+            #push number of identifiers hex value
             list_js_features.append(features_collection.number_of_hex_identifier(identifiers))
-            'collect Array elements'
+            #collect Array elements
             js_var_values = features_collection.var_values_extract(parsed_js)
-            'push number of elements in Array'
+            #push number of elements in Array
             list_js_features.append(len(js_var_values))
-            'push number of Array elements that starts with _0x'
+            #push number of Array elements that starts with _0x
             list_js_features.append(features_collection.number_of_0x_var(js_var_values))
-            'push number of Array elements that are hex value'
+            #push number of Array elements that are hex value
             list_js_features.append(features_collection.number_of_hex_var(js_var_values))
 
-            'detection of push-shift packer'
+            #detection of push-shift packer
             is_obfuscation = packers_signatures.detect_push_shift_obfuscation_func(parsed_js)
             list_js_features.append(is_obfuscation)
-            'detection of kaktys packer'
+            #detection of kaktys packer
             is_kaktys = packers_signatures.detect_kaktys_encode(parsed_js)
             list_js_features.append(is_kaktys)
-            'detection of munger packer'
+            #detection of munger packer
             is_munger = packers_signatures.detect_munger_packer(parsed_js)
             list_js_features.append(is_munger)
-            'detection of aes-ctr packer'
+            #detection of aes-ctr packer
             is_aes_ctr = packers_signatures.detect_aes_ctr_decrypt(parsed_js)
             list_js_features.append(is_aes_ctr)
-            'detection of eval(unescape packer'
+            #detection of eval(unescape packer
             is_eval_unescape = packers_signatures.detect_eval_unescape(parsed_js)
             list_js_features.append(is_eval_unescape)
 
@@ -179,5 +179,6 @@ if __name__ == "__main__":
         else:
             print('The files path specified does not exist')
     elif args.mode[0] == 'single_url_scan':
-
         main(args.mode[0], args.files[0], args.results[0])
+    else:
+        print("unknown mode type was used")
