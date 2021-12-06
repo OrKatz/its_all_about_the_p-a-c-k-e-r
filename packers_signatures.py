@@ -1,9 +1,10 @@
-
-#text based detection dictonary
+# text based detection dictonary
 sig_dict = ['createobject', 'wscript', 'shell', 'activexbbject', 'adodb.stream', 'scripting.filesystemobject',
             'msxml2.xmlhttp']
 
 '''Push-shift packer signature'''
+
+
 def detect_push_shift_obfuscation_func(parsed_js):
     for level1 in parsed_js['body']:
         try:
@@ -12,17 +13,20 @@ def detect_push_shift_obfuscation_func(parsed_js):
                     for level3 in level2['declarations']:
                         for level4 in level3['init']['body']['body']:
                             for level5 in level4['body']['body']:
-                                if (level5['expression']['callee']['property']['value'] == 'push'):
+                                if level5['expression']['callee']['property']['value'] == 'push':
                                     for level6 in level5['expression']['arguments']:
-                                        if (level6['callee']['property']['value'] == 'shift'):
-                                            return ('shift_push_obfuscation_func')
+                                        if level6['callee']['property']['value'] == 'shift':
+                                            return 'shift_push_obfuscation_func'
 
         except Exception as e:
             pass
 
     return 'no_obfuscation'
 
+
 '''kaktys packer signature'''
+
+
 def detect_kaktys_encode(parsed_js):
     for level1 in parsed_js['body']:
         try:
@@ -45,7 +49,10 @@ def detect_kaktys_encode(parsed_js):
 
     return 'no_obfuscation'
 
+
 '''munger packer signature'''
+
+
 def detect_munger_packer(parsed_js):
     for level1 in parsed_js['body']:
         try:
@@ -79,7 +86,10 @@ def detect_munger_packer(parsed_js):
 
     return 'no_obfuscation'
 
+
 '''eval_unescape packer signature'''
+
+
 def detect_eval_unescape(parsed_js):
     for level1 in parsed_js['body']:
         try:
@@ -96,6 +106,8 @@ def detect_eval_unescape(parsed_js):
 
 
 '''aes_ctr packer signature'''
+
+
 def detect_aes_ctr_decrypt(parsed_js):
     for level1 in parsed_js['body']:
         try:
