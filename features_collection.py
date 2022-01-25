@@ -1,4 +1,6 @@
 import re
+import dpath.util
+
 COLLECT_VARS_AND_FUNC = "'type':\s+u'([^']+)', 'name':\su'([^']+)'"
 
 def list_unique_identifiers(identifiers):
@@ -31,18 +33,13 @@ def collect_func_var_names(parsed_js):
 
 
 def var_values_extract(parsed_js):
-    var_values = []
-    for level1 in parsed_js['body']:
-        if level1['type'] == 'VariableDeclaration':
-            for level2 in level1['declarations']:
-                if level2['type'] == 'VariableDeclarator':
-                    for level3 in level2['init']:
-                        if level2['init']['type'] == 'ArrayExpression':
-                            for level4 in level2['init']['elements']:
-                                if level4['type'] == 'Literal':
-                                    var_values.append(level4['raw'])
 
-    return var_values
+    try:
+        return dpath.util.values(parsed_js, 'body/*/declarations/*/init/elements/*/raw')
+
+    except Exception as e:
+        print(e)
+        pass
 
 
 def number_of_0x_identifier(identifiers):

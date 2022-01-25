@@ -74,8 +74,8 @@ def check_file(url, body):
             list_js_features.append(features_collection.number_of_hex_var(js_var_values))
 
             #detection of push-shift packer
-            is_obfuscation = packers_signatures.detect_push_shift_obfuscation_func(parsed_js)
-            list_js_features.append(is_obfuscation)
+            is_push_shift = packers_signatures.detect_push_shift_obfuscation_func(parsed_js)
+            list_js_features.append(is_push_shift)
             #detection of kaktys packer
             is_kaktys = packers_signatures.detect_kaktys_encode(parsed_js)
             list_js_features.append(is_kaktys)
@@ -91,9 +91,9 @@ def check_file(url, body):
 
             list_file_js_features.append(list_js_features)
             if (is_aes_ctr != "no_obfuscation") or (is_eval_unescape != "no_obfuscation") or (is_munger != "no_obfuscation") or (
-                    is_kaktys != "no_obfuscation") or (is_obfuscation != "no_obfuscation"):
+                    is_kaktys != "no_obfuscation") or (is_push_shift != "no_obfuscation"):
                 detection_print(url, {'is_aes_ctr': is_aes_ctr, 'is_eval_unescape': is_eval_unescape, 'is_munger': is_munger, 'is_kaktys': is_kaktys,
-                                      'is_obfuscation': is_obfuscation})
+                                      'is_push_shift': is_push_shift})
 
         except Exception as e:
             errors_prints(config.ERROR_TYPES['error'], e)
@@ -135,7 +135,7 @@ def scan_files(file_path, results_file):
         results = open(results_file, 'w')
         files_list = []
         for filename in os.listdir(file_path):
-            if filename.endswith('.js'):
+            if filename.endswith('.js') or filename.endswith('.txt'):
                 files_list.append(filename)
 
         print(files_list)
