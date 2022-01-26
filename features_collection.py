@@ -1,7 +1,8 @@
 import re
 import dpath.util
 
-COLLECT_VARS_AND_FUNC = "'type':\s+u'([^']+)', 'name':\su'([^']+)'"
+COLLECT_VARS_AND_FUNC_REGEX = "'type':\s+u?'([^']+)', 'name':\su?'([^']+)'"
+CHECK_IDENTIFIER_HEX_REGEX = r'(\\_x[0-9a-z][0-9a-z]){4,}'
 
 def list_unique_identifiers(identifiers):
     js_identifiers = []
@@ -17,7 +18,7 @@ def check_identifier_0x(x):
 
 
 def check_identifier_hex(x):
-    hex_encoded_identifiers = re.search(r'(\\_x[0-9a-z][0-9a-z]){4,}', str(x))
+    hex_encoded_identifiers = re.search(CHECK_IDENTIFIER_HEX_REGEX, str(x))
     if hex_encoded_identifiers:
         return True
     return False
@@ -25,7 +26,7 @@ def check_identifier_hex(x):
 
 def collect_func_var_names(parsed_js):
     try:
-        x = re.findall(COLLECT_VARS_AND_FUNC, str(parsed_js), re.DOTALL)
+        x = re.findall(COLLECT_VARS_AND_FUNC_REGEX, str(parsed_js), re.DOTALL)
     except Exception as e:
         print(e)
         return None
@@ -33,9 +34,9 @@ def collect_func_var_names(parsed_js):
 
 
 def var_values_extract(parsed_js):
-
     try:
-        return dpath.util.values(parsed_js, 'body/*/declarations/*/init/elements/*/raw')
+        values = [x.strip('\'') for x in dpath.util.values(parsed_js, 'body/*/declarations/*/init/elements/*/raw')]
+        return(values)
 
     except Exception as e:
         print(e)
@@ -69,7 +70,7 @@ def number_of_hex_identifier(identifiers):
 def number_of_0x_var(js_var_values):
     try:
         number_of_0x_var_values = 0
-        for v_value in js_var_values:
+        for v_value in list(js_var_values):
             if check_identifier_0x(v_value):
                 number_of_0x_var_values += 1
         return number_of_0x_var_values
@@ -91,14 +92,12 @@ def number_of_hex_var(js_var_values):
 
 
 def js_blocks_declarations(parsed_js):
-    declarations_list = []
-    for key1 in parsed_js:
-        if key1 == 'body':
-            for key2 in parsed_js[key1]:
-                for key3 in key2:
-                    if key3 == 'type':
-                        declarations_list.append(key2[key3])
-    return declarations_list
+    try:
+        return dpath.util.values(parsed_js, 'body/*/type')
+
+    except Exception as e:
+        print(e)
+        pass
 
 
 def remove_html_tags(text):
