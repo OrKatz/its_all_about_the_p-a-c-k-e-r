@@ -21,6 +21,23 @@ def detection_print(url, log):
             print("{} - True".format(i))
 
 
+def signatures_execution(list_js_features, parsed_js, url):
+    """Executing all packers signature def and print results"""
+    try:
+        detection_print_values = {}
+        for detection_def in config.LIST_OF_SIGNATURES:
+            detection_value = getattr(packers_signatures, detection_def)(parsed_js)
+            detection_print_values[detection_def] = detection_value
+            list_js_features.append(detection_value)
+
+        detection_print(url, detection_print_values)
+        return list_js_features
+
+    except Exception as e:
+        errors_prints(config.ERROR_TYPES['error'], e)
+        pass
+
+
 def check_file(url, body):
     """Going over file to collect features and execute obfuscation detection"""
     'contains the info for all JS codes features in a single file (i.e. - An HTML file can contains many JS codes)'
@@ -73,30 +90,8 @@ def check_file(url, body):
             #push number of Array elements that are hex value
             list_js_features.append(features_collection.number_of_hex_var(js_var_values))
 
-            #detection of push-shift packer v1
-            is_push_shift = packers_signatures.detect_push_shift_obfuscation_func(parsed_js)
-            list_js_features.append(is_push_shift)
-            # detection of push-shift packer v2
-            is_push_shift_v2 = packers_signatures.detect_push_shift_v2_obfuscation_func(parsed_js)
-            list_js_features.append(is_push_shift_v2)
-            #detection of kaktys packer
-            is_kaktys = packers_signatures.detect_kaktys_encode(parsed_js)
-            list_js_features.append(is_kaktys)
-            #detection of munger packer
-            is_munger = packers_signatures.detect_munger_packer(parsed_js)
-            list_js_features.append(is_munger)
-            #detection of aes-ctr packer
-            is_aes_ctr = packers_signatures.detect_aes_ctr_decrypt(parsed_js)
-            list_js_features.append(is_aes_ctr)
-            #detection of eval(unescape packer
-            is_eval_unescape = packers_signatures.detect_eval_unescape(parsed_js)
-            list_js_features.append(is_eval_unescape)
-
+            list_js_features = signatures_execution(list_js_features, parsed_js, url)
             list_file_js_features.append(list_js_features)
-            if (is_aes_ctr != "no_obfuscation") or (is_eval_unescape != "no_obfuscation") or (is_munger != "no_obfuscation") or (
-                    is_kaktys != "no_obfuscation") or (is_push_shift != "no_obfuscation") or (is_push_shift_v2 != "no_obfuscation"):
-                detection_print(url, {'is_aes_ctr': is_aes_ctr, 'is_eval_unescape': is_eval_unescape, 'is_munger': is_munger, 'is_kaktys': is_kaktys,
-                                      'is_push_shift': is_push_shift, 'is_push_shift_v2': is_push_shift_v2})
 
         except Exception as e:
             errors_prints(config.ERROR_TYPES['error'], e)

@@ -8,7 +8,7 @@ ERROR_TYPES = {'url': "URL",
                'error': "ERROR",
                'warning': "WARNING",
                'message': "MESSAGE"}
-
+LIST_OF_SIGNATURES = ['detect_push_shift_obfuscation_func', 'detect_push_shift_v2_obfuscation_func', 'detect_kaktys_encode', 'detect_munger_packer', 'detect_aes_ctr_decrypt', 'detect_eval_unescape']
 
 def arguments_config():
     parser = argparse.ArgumentParser(description='Javascript Obfuscation Detector')
