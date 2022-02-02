@@ -35,6 +35,7 @@ def collect_func_var_names(parsed_js):
 
 def var_values_extract(parsed_js):
     try:
+        values = []
         if dpath.util.values(parsed_js, 'body/*/declarations/*/init/elements/*/raw'):
             values = [x.strip('\'') for x in dpath.util.values(parsed_js, 'body/*/declarations/*/init/elements/*/raw')]
         elif dpath.util.values(parsed_js, 'body/*/body/body/*/declarations/*/init/elements/*/raw'):

@@ -73,9 +73,12 @@ def check_file(url, body):
             #push number of Array elements that are hex value
             list_js_features.append(features_collection.number_of_hex_var(js_var_values))
 
-            #detection of push-shift packer
+            #detection of push-shift packer v1
             is_push_shift = packers_signatures.detect_push_shift_obfuscation_func(parsed_js)
             list_js_features.append(is_push_shift)
+            # detection of push-shift packer v2
+            is_push_shift_v2 = packers_signatures.detect_push_shift_v2_obfuscation_func(parsed_js)
+            list_js_features.append(is_push_shift_v2)
             #detection of kaktys packer
             is_kaktys = packers_signatures.detect_kaktys_encode(parsed_js)
             list_js_features.append(is_kaktys)
@@ -91,9 +94,9 @@ def check_file(url, body):
 
             list_file_js_features.append(list_js_features)
             if (is_aes_ctr != "no_obfuscation") or (is_eval_unescape != "no_obfuscation") or (is_munger != "no_obfuscation") or (
-                    is_kaktys != "no_obfuscation") or (is_push_shift != "no_obfuscation"):
+                    is_kaktys != "no_obfuscation") or (is_push_shift != "no_obfuscation") or (is_push_shift_v2 != "no_obfuscation"):
                 detection_print(url, {'is_aes_ctr': is_aes_ctr, 'is_eval_unescape': is_eval_unescape, 'is_munger': is_munger, 'is_kaktys': is_kaktys,
-                                      'is_push_shift': is_push_shift})
+                                      'is_push_shift': is_push_shift, 'is_push_shift_v2': is_push_shift_v2})
 
         except Exception as e:
             errors_prints(config.ERROR_TYPES['error'], e)

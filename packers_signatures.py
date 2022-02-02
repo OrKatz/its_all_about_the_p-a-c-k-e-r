@@ -2,7 +2,7 @@ import dpath.util
 
 
 def detect_push_shift_obfuscation_func(parsed_js):
-    '''Push-shift packer signature'''
+    '''Push-shift packer signature ver 1'''
     try:
         if 'BlockStatement' in dpath.util.values(parsed_js, 'body/*/expression/callee/body/type'):
             if 'push' in dpath.util.values(parsed_js, 'body/*/expression/callee/body/body/*/declarations/*/init/body/body/*/body/body/*/expression/callee/property/value'):
@@ -14,6 +14,19 @@ def detect_push_shift_obfuscation_func(parsed_js):
         return 'no_obfuscation'
         pass
 
+def detect_push_shift_v2_obfuscation_func(parsed_js):
+    '''Push-shift packer signature ver2'''
+    try:
+        #print(json.dumps(parsed_js, indent=4, sort_keys=True))
+        if 'BlockStatement' in dpath.util.values(parsed_js, 'body/*/expression/callee/body/type'):
+            if 'push' in dpath.util.values(parsed_js,'body/*/expression/callee/body/body/*/body/body/*/block/body/*/alternate/body/*/expression/callee/property/value'):
+                if 'shift' in dpath.util.values(parsed_js,'body/*/expression/callee/body/body/*/body/body/*/block/body/*/alternate/body/*/expression/arguments/*/callee/property/value'):
+                    return 'shift_push_v2_obfuscation_func'
+        return 'no_obfuscation'
+    except Exception as e:
+        print(e)
+        return 'no_obfuscation'
+        pass
 
 
 
