@@ -1,4 +1,3 @@
-import hashlib
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -6,11 +5,24 @@ from pyjsparser import parse
 import packers_signatures
 import features_collection
 import config
+import sys
+
+
+def print_exception_context():
+    exception_type, exception_object, exception_traceback = sys.exc_info()
+    filename = exception_traceback.tb_frame.f_code.co_filename
+    line_number = exception_traceback.tb_lineno
+
+    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "Exception type: ", exception_type))
+    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "File name: ", filename))
+    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "Line number: ", line_number))
 
 
 def errors_prints(log_type, log):
     """writing errors to log file"""
-    errors_file.write(str("{}: {} \n").format(log_type, log))
+    config.ERRORS_FILE.write(str("{}: {} \n").format(log_type, log))
+    print_exception_context()
+    config.ERRORS_FILE.write("#######################################\n")
 
 
 def detection_print(url, log):
@@ -38,59 +50,75 @@ def signatures_execution(list_js_features, parsed_js, url):
         pass
 
 
+def features_collection_execution(list_js_features, js_code_block, parsed_js, identifiers, js_var_values):
+    """Executing all file features collection def"""
+    try:
+        for feature_type in config.LIST_OF_FEATURES:
+            for feature_def in eval('config.'+feature_type):
+                feature_value = getattr(features_collection, feature_def)(eval(config.LIST_OF_FEATURES[feature_type]))
+                list_js_features.append(feature_value)
+
+        return list_js_features
+
+    except Exception as e:
+        errors_prints(config.ERROR_TYPES['error'], e)
+        pass
+
+
+def features_collection_signatures_names_header():
+    """Executing all file features collection name and packers signatures names for result file header """
+    try:
+        features_names = []
+        for feature_type in config.LIST_OF_FEATURES:
+            for feature_def in eval('config.'+feature_type):
+                features_names.append(feature_def)
+
+        for signature_name in config.LIST_OF_SIGNATURES:
+            features_names.append(signature_name)
+
+        return features_names
+
+    except Exception as e:
+        errors_prints(config.ERROR_TYPES['error'], e)
+        pass
+
+
 def check_file(url, body):
     """Going over file to collect features and execute obfuscation detection"""
-    'contains the info for all JS codes features in a single file (i.e. - An HTML file can contains many JS codes)'
+    #contains the info for all JS codes features in a single file (i.e. - An HTML file can contains many JS codes)
     list_file_js_features = []
     soup = BeautifulSoup(body, features="html.parser")
 
-    'extracting all JS codes from file'
+    #extracting all JS codes from file
     if url.endswith(".js"):
         js_code = [body]
     else:
         js_code = soup.find_all("script")
 
-    'Adding URL'
+    #Adding URL
     list_file_js_features.append(url)
-    'Adding number of JS codes'
+    #Adding number of JS codes
     list_file_js_features.append(len(js_code))
 
-    'Going over all file JS codes'
-    for i in js_code:
+    #Going over all file JS code blocks in given file
+    for js_code_block in js_code:
         try:
             #All features for a single JS code (one file can contains numerous codes of JS)
             list_js_features = []
             #When file is HTML need to remove the <script> tags
             if url.endswith(".js"):
-                parsed_js = parse(i)
+                parsed_js = parse(js_code_block)
             else:
                 parsed_js = parse(features_collection.remove_html_tags(i))
-            #store JS hash value
-            list_js_features.append(hashlib.sha256(i.encode('utf-8')).hexdigest())
-            #collect all vars and func names
-            func_var_names_list = features_collection.collect_func_var_names(parsed_js)
-            #collect hash of the AST declaration
-            declarations_list = features_collection.js_blocks_declarations(parsed_js)
-            #store hash of the AST declaration
-            list_js_features.append(hashlib.sha256('_'.join(declarations_list).encode('utf-8')).hexdigest())
-            #collect unique vars and func names (identifiers)
-            identifiers = features_collection.list_unique_identifiers(func_var_names_list)
-            #push number of unique vars and func names (identifiers)
-            list_js_features.append(len(identifiers))
-            #push number of identifiers starting with _0x
-            list_js_features.append(features_collection.number_of_0x_identifier(identifiers))
-            #push number of identifiers hex value
-            list_js_features.append(features_collection.number_of_hex_identifier(identifiers))
+            #Collect func/var values
+            identifiers = features_collection.unique_identifiers(parsed_js)
             #collect Array elements
             js_var_values = features_collection.var_values_extract(parsed_js)
-            #push number of elements in Array
-            list_js_features.append(len(js_var_values))
-            #push number of Array elements that starts with _0x
-            list_js_features.append(features_collection.number_of_0x_var(js_var_values))
-            #push number of Array elements that are hex value
-            list_js_features.append(features_collection.number_of_hex_var(js_var_values))
-
+            #collecting all features from different JS parsed data including the JS code, the ASP code representation, the collected identifiers and Array values
+            list_js_features = features_collection_execution(list_js_features, js_code_block, parsed_js, identifiers, js_var_values)
+            #executing the packers signatures
             list_js_features = signatures_execution(list_js_features, parsed_js, url)
+            #adding all JS code features to the file features strcture
             list_file_js_features.append(list_js_features)
 
         except Exception as e:
@@ -109,6 +137,8 @@ def urls_scan(file_urls, results_file):
     """scan list of urls (it can also be activated with list with one item (single url)"""
     results = open(results_file, 'w')
     url_numerator = 0
+    # writing the output header field names
+    results.write('url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header()) + "\n")
     for url in file_urls:
         try:
             url_numerator = url_numerator + 1
@@ -132,6 +162,7 @@ def scan_files(file_path, results_file):
         file_numerator = file_numerator + 1
         results = open(results_file, 'w')
         files_list = []
+        results.write('url, ' + 'number_of_js_code_blocks, ' + str(features_collection_signatures_names_header()) + "\n")
         for filename in os.listdir(file_path):
             if filename.endswith('.js') or filename.endswith('.txt'):
                 files_list.append(filename)
@@ -164,7 +195,6 @@ def main(mode, files_scan_path="", results_file=""):
 
 
 if __name__ == "__main__":
-    errors_file = open(config.ERRORS_FILE, 'w')
     args = config.arguments_config()
     if args.mode[0] == 'urls_scan':
         if os.path.exists(args.files[0]):

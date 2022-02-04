@@ -3,12 +3,17 @@ import argparse
 DEFAULT_MODE = 'local_scan'
 DEFAULT_RESULTS_FILE = 'its_all_about_the_packer_results.txt'
 DEFAULT_FILES_SCAN_PATH = '~/'
-ERRORS_FILE = 'errors.txt'
+ERRORS_FILE = open('errors.txt', 'w')
 ERROR_TYPES = {'url': "URL",
                'error': "ERROR",
                'warning': "WARNING",
                'message': "MESSAGE"}
 LIST_OF_SIGNATURES = ['detect_push_shift_obfuscation_func', 'detect_push_shift_v2_obfuscation_func', 'detect_kaktys_encode', 'detect_munger_packer', 'detect_aes_ctr_decrypt', 'detect_eval_unescape']
+LIST_OF_JS_CODE_FEATURES = ['js_hash']
+LIST_OF_JS_AST_CODE_FEATURES = ['declarations_hash', 'num_unique_identifiers']
+LIST_OF_JS_IDENTIFIERS_FEATURES = ['number_of_0x_identifier', 'number_of_hex_identifier']
+LIST_OF_JS_VAR_VALUES_FEATURES = ['num_unique_var_values', 'number_of_0x_var', 'number_of_hex_var']
+LIST_OF_FEATURES = {'LIST_OF_JS_CODE_FEATURES': 'js_code_block', 'LIST_OF_JS_AST_CODE_FEATURES': 'parsed_js', 'LIST_OF_JS_IDENTIFIERS_FEATURES': 'identifiers', 'LIST_OF_JS_VAR_VALUES_FEATURES': 'js_var_values'}
 
 def arguments_config():
     parser = argparse.ArgumentParser(description='Javascript Obfuscation Detector')
@@ -22,3 +27,5 @@ def arguments_config():
 
     args = parser.parse_args()
     return args
+
+
