@@ -143,7 +143,7 @@ def urls_scan(file_urls, results_file):
         try:
             url_numerator = url_numerator + 1
             url = url.strip('\n')
-            r = requests.get(url)
+            r = requests.get(url, timeout=1)
             file_content = r.text
             results.write(str(check_file(url, file_content)) + "\n")
 
@@ -196,17 +196,17 @@ def main(mode, files_scan_path="", results_file=""):
 
 if __name__ == "__main__":
     args = config.arguments_config()
-    if args.mode[0] == 'urls_scan':
-        if os.path.exists(args.files[0]):
-            main(args.mode[0], args.files[0], args.results[0])
+    if args.mode == 'urls_scan':
+        if os.path.exists(args.files):
+            main(args.mode, args.files, args.results)
         else:
             print('The file with urls path specified does not exist')
-    elif args.mode[0] == 'local_scan':
-        if os.path.isdir(args.files[0]):
-            main(args.mode[0], args.files[0], args.results[0])
+    elif args.mode == 'local_scan':
+        if os.path.isdir(args.files):
+            main(args.mode, args.files, args.results)
         else:
             print('The files path specified does not exist')
-    elif args.mode[0] == 'single_url_scan':
-        main(args.mode[0], args.files[0], args.results[0])
+    elif args.mode == 'single_url_scan':
+        main(args.mode, args.files, args.results)
     else:
         print("unknown mode type was used")
