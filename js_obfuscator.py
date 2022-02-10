@@ -138,7 +138,7 @@ def urls_scan(file_urls, results_file):
     results = open(results_file, 'w')
     url_numerator = 0
     # writing the output header field names
-    results.write('url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header()) + "\n")
+    results.write('url' + 'number_of_js_code_blocks' + str(features_collection_signatures_names_header()) + "\n")
     for url in file_urls:
         try:
             url_numerator = url_numerator + 1
