@@ -4,7 +4,7 @@ from pyjsparser import parse
 
 @pytest.fixture
 def ast_input():
-    return parse(open('examples/push_shift_example_phishing_2.js', 'r').read())
+    return parse(open('../examples/push_shift_example_phishing_2.js', 'r').read())
 
 
 @pytest.fixture

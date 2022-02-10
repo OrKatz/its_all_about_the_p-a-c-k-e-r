@@ -4,31 +4,31 @@ from pyjsparser import parse
 
 @pytest.fixture
 def push_shift_input_file():
-    return parse(open('examples/push_shift_example_phishing_2.js', 'r').read())
+    return parse(open('../examples/push_shift_example_phishing_2.js', 'r').read())
 
 
 @pytest.fixture
 def push_shift_ver_2_input_file():
-    return parse(open('examples/push_shift_new_version.js', 'r').read())
+    return parse(open('../examples/push_shift_new_version.js', 'r').read())
 
 
 @pytest.fixture
 def mungar_input_file():
-    return parse(open('examples/mungar_example_with_params_packed_value.js', 'r').read())
+    return parse(open('../examples/mungar_example_with_params_packed_value.js', 'r').read())
 
 
 @pytest.fixture
 def kaktys_input_file():
-    return parse(open('examples/kaktys_example.js', 'r').read())
+    return parse(open('../examples/kaktys_example.js', 'r').read())
 
 @pytest.fixture
 def eval_unescape_input_file():
-    return parse(open('examples/eval_unescape_example.js', 'r').read())
+    return parse(open('../examples/eval_unescape_example.js', 'r').read())
 
 
 @pytest.fixture
 def aes_ctr_input_file():
-    return parse(open('examples/aes_ctr_example.js', 'r').read())
+    return parse(open('../examples/aes_ctr_example.js', 'r').read())
 
 
 def test_detect_push_shift_obfuscation_func_validation(push_shift_input_file, aes_ctr_input_file):

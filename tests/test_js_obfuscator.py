@@ -4,7 +4,7 @@ import js_obfuscator
 
 @pytest.fixture
 def ast_input():
-    return open('examples/push_shift_example_phishing_2.js', 'r').read()
+    return open('../examples/push_shift_example_phishing_2.js', 'r').read()
 
 
 def test_check_file_validation(ast_input):
