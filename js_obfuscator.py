@@ -6,6 +6,7 @@ import packers_signatures
 import features_collection
 import config
 import sys
+import logging
 
 
 def print_exception_context():
@@ -13,17 +14,20 @@ def print_exception_context():
     filename = exception_traceback.tb_frame.f_code.co_filename
     line_number = exception_traceback.tb_lineno
 
-    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "Exception type: ", exception_type))
-    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "File name: ", filename))
-    config.ERRORS_FILE.write(str("{}: {} {}\n").format(config.ERROR_TYPES['error'], "Line number: ", line_number))
+    logging.error(str("{}: {}\n").format("Exception type: ", exception_type))
+    logging.error(str("{}: {}\n").format("File name: ", filename))
+    logging.error(str("{}: {}\n").format("Line number: ", line_number))
 
 
-def errors_prints(log_type, log):
+def errors_prints(log):
     """writing errors to log file"""
-    config.ERRORS_FILE.write(str("{}: {} \n").format(log_type, log))
-    print_exception_context()
-    config.ERRORS_FILE.write("#######################################\n")
-
+    try:
+        logging.error(str("{}\n").format(log))
+        print_exception_context()
+        logging.error("#######################################\n")
+    except Exception as e:
+        print(e)
+        pass
 
 def detection_print(url, log):
     """Printing detections"""
@@ -46,7 +50,7 @@ def signatures_execution(list_js_features, parsed_js, url):
         return list_js_features
 
     except Exception as e:
-        errors_prints(config.ERROR_TYPES['error'], e)
+        errors_prints(e)
         pass
 
 
@@ -61,7 +65,7 @@ def features_collection_execution(list_js_features, js_code_block, parsed_js, id
         return list_js_features
 
     except Exception as e:
-        errors_prints(config.ERROR_TYPES['error'], e)
+        errors_prints(e)
         pass
 
 
@@ -79,7 +83,7 @@ def features_collection_signatures_names_header():
         return features_names
 
     except Exception as e:
-        errors_prints(config.ERROR_TYPES['error'], e)
+        errors_prints(e)
         pass
 
 
@@ -122,7 +126,7 @@ def check_file(url, body):
             list_file_js_features.append(list_js_features)
 
         except Exception as e:
-            errors_prints(config.ERROR_TYPES['error'], e)
+            errors_prints(e)
             pass
     return list_file_js_features
 
@@ -148,11 +152,10 @@ def urls_scan(file_urls, results_file):
             results.write(str(check_file(url, file_content)) + "\n")
 
         except Exception as e:  # except KeyError:
-            errors_prints(str(url_numerator) + " " + config.ERROR_TYPES['url'], url)
-            errors_prints(config.ERROR_TYPES['message'], "error on scan return value")
-            errors_prints(config.ERROR_TYPES['error'], e)
+            errors_prints(str(url_numerator) + " " + url)
+            errors_prints("error on scan return value")
+            errors_prints(e)
             results.write("[{}, \"error_in_scan\"]\n".format(url))
-            pass
 
 
 def scan_files(file_path, results_file):
@@ -174,9 +177,9 @@ def scan_files(file_path, results_file):
                 results.write(str(check_file(os.path.join(file_path, file_name), file_data)) + "\n")
 
     except Exception as e:  # except KeyError:
-        errors_prints(str(file_numerator) + " " + config.ERROR_TYPES['url'], filename)
-        errors_prints(config.ERROR_TYPES['message'], "error on scan return value")
-        errors_prints(config.ERROR_TYPES['error'], e)
+        errors_prints(str(file_numerator) + " " + filename)
+        errors_prints("error on scan return value")
+        errors_prints(e)
         pass
 
 
@@ -196,6 +199,7 @@ def main(mode, files_scan_path="", results_file=""):
 
 if __name__ == "__main__":
     args = config.arguments_config()
+    logging.basicConfig(filename='error.log', filemode='w',)
     if args.mode == 'urls_scan':
         if os.path.exists(args.files):
             main(args.mode, args.files, args.results)

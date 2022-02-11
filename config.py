@@ -1,9 +1,9 @@
 import argparse
+import logging
 
 DEFAULT_MODE = 'local_scan'
 DEFAULT_RESULTS_FILE = 'its_all_about_the_packer_results.txt'
 DEFAULT_FILES_SCAN_PATH = '~/'
-ERRORS_FILE = open('errors.txt', 'w')
 ERROR_TYPES = {'url': "URL",
                'error': "ERROR",
                'warning': "WARNING",

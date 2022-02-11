@@ -15,7 +15,7 @@ def unique_identifiers(parsed_js):
             js_identifiers.append(i)
         return set(js_identifiers)
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -41,7 +41,7 @@ def check_identifier_hex(x):
             return True
         return False
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -49,7 +49,7 @@ def collect_func_var_names(parsed_js):
     try:
         x = re.findall(COLLECT_VARS_AND_FUNC_REGEX, str(parsed_js), re.DOTALL)
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return None
     return x
 
@@ -65,7 +65,7 @@ def var_values_extract(parsed_js):
         return(values)
 
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -77,7 +77,7 @@ def number_of_0x_identifier(identifiers):
                 number_of_0x_identifiers += 1
         return number_of_0x_identifiers
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return None
 
 
@@ -89,7 +89,7 @@ def number_of_hex_identifier(identifiers):
                 number_of_hex_identifiers += 1
         return number_of_hex_identifiers
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return None
 
 
@@ -101,7 +101,7 @@ def number_of_0x_var(js_var_values):
                 number_of_0x_var_values += 1
         return number_of_0x_var_values
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return None
 
 
@@ -113,7 +113,7 @@ def number_of_hex_var(js_var_values):
                 number_of_hex_var_values += 1
         return number_of_hex_var_values
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return None
 
 
@@ -122,7 +122,7 @@ def js_blocks_declarations(parsed_js):
         return dpath.util.values(parsed_js, 'body/*/type')
 
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -132,7 +132,7 @@ def remove_html_tags(text):
         clean = re.compile('<.*?>')
         return re.sub(clean, '', str(text))
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -141,7 +141,7 @@ def js_hash(js_code_block):
     try:
         return hashlib.sha256(js_code_block.encode('utf-8')).hexdigest()
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass
 
 
@@ -150,5 +150,5 @@ def declarations_hash(parsed_js):
     try:
         return hashlib.sha256('_'.join(js_blocks_declarations(parsed_js)).encode('utf-8')).hexdigest()
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         pass

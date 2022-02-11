@@ -12,7 +12,7 @@ def detect_push_shift_obfuscation_func(parsed_js):
                     return 'shift_push_obfuscation_func'
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
 
 
@@ -26,7 +26,7 @@ def detect_push_shift_v2_obfuscation_func(parsed_js):
                     return 'shift_push_v2_obfuscation_func'
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
 
 
@@ -41,7 +41,7 @@ def detect_kaktys_encode(parsed_js):
                         return 'kaktys_encode_match_' + str(dpath.util.get(parsed_js, 'body/*/id/name'))
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
 
 
@@ -57,7 +57,7 @@ def detect_munger_packer(parsed_js):
                         return 'munger_packer_match_'
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
 
 
@@ -70,7 +70,7 @@ def detect_eval_unescape(parsed_js):
                     return "eval_unescape_packer_match"
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
 
 
@@ -84,5 +84,5 @@ def detect_aes_ctr_decrypt(parsed_js):
                 return "aes_ctr_decrypt_packer_match"
         return 'no_obfuscation'
     except Exception as e:
-        js_obfuscator.errors_prints(config.ERROR_TYPES['error'], e)
+        js_obfuscator.errors_prints(e)
         return 'no_obfuscation'
