@@ -5,7 +5,7 @@ import js_obfuscator
 import config
 
 COLLECT_VARS_AND_FUNC_REGEX = "'type':\s+u?'([^']+)', 'name':\su?'([^']+)'"
-CHECK_IDENTIFIER_HEX_REGEX = r'(\\_x[0-9a-z][0-9a-z]){4,}'
+CHECK_IDENTIFIER_HEX_REGEX = r'(\\x[0-9a-z][0-9a-z]){4,}'
 
 
 def unique_identifiers(parsed_js):

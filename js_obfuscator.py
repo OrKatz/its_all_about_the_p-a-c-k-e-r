@@ -185,11 +185,11 @@ def scan_files(file_path, results_file):
 
 def main(mode, files_scan_path="", results_file=""):
     """Main"""
-    if mode == 'urls_scan':
+    if mode == config.MODES_URLS:
         urls_file_scan(files_scan_path, results_file)
-    elif mode == 'local_scan':
+    elif mode == config.MODES_LOCAL:
         scan_files(files_scan_path, results_file)
-    elif mode == 'single_url_scan':
+    elif mode == config.MODES_SINGLE:
         # since the input is single url files_scan_path is being rapped by list
         urls_scan([files_scan_path], results_file)
     else:

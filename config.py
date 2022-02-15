@@ -1,13 +1,10 @@
 import argparse
-import logging
 
-DEFAULT_MODE = 'local_scan'
+MODES_LOCAL = 'local_scan'
+MODES_URLS = 'urls_scan'
+MODES_SINGLE = 'single_url_scan'
 DEFAULT_RESULTS_FILE = 'its_all_about_the_packer_results.txt'
 DEFAULT_FILES_SCAN_PATH = '~/'
-ERROR_TYPES = {'url': "URL",
-               'error': "ERROR",
-               'warning': "WARNING",
-               'message': "MESSAGE"}
 LIST_OF_SIGNATURES = ['detect_push_shift_obfuscation_func', 'detect_push_shift_v2_obfuscation_func', 'detect_kaktys_encode', 'detect_munger_packer', 'detect_aes_ctr_decrypt', 'detect_eval_unescape']
 LIST_OF_JS_CODE_FEATURES = ['js_hash']
 LIST_OF_JS_AST_CODE_FEATURES = ['declarations_hash', 'num_unique_identifiers']

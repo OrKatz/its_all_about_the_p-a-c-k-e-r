@@ -30,7 +30,7 @@ def test_check_identifier_0x_match_value():
 
 
 def test_check_identifier_hex_match_value():
-    assert features_collection.check_identifier_hex('\\_xdd\\_xdd\\_xdd\\_xdd') is True, "test succeeded"
+    assert features_collection.check_identifier_hex('\\xdd\\xdd\\xdd\\xdd') is True, "test succeeded"
     assert features_collection.check_identifier_hex('0xfdfdf') is False, "test succeeded"
 
 
