@@ -5,6 +5,7 @@ from pyjsparser import parse
 from js_packers_detection import config, features_collection, packers_signatures
 import sys
 import logging
+import csv
 
 
 def print_exception_context():
@@ -137,43 +138,64 @@ def urls_file_scan(path, results_file):
 
 def urls_scan(file_urls, results_file):
     """scan list of urls (it can also be activated with list with one item (single url)"""
-    results = open(results_file, 'w')
-    url_numerator = 0
-    # writing the output header field names
-    results.write('url' + 'number_of_js_code_blocks' + str(features_collection_signatures_names_header()) + "\n")
-    for url in file_urls:
-        try:
-            url_numerator = url_numerator + 1
-            url = url.strip('\n')
-            r = requests.get(url, timeout=1)
-            file_content = r.text
-            results.write(str(check_file(url, file_content)) + "\n")
+    with open(results_file, 'w') as csv_result_file:
+        scanwriter = csv.writer(csv_result_file)
+        scanwriter.writerow(['url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header())])
+        url_numerator = 0
+        result_value = []
+        # writing the output header field names
+        for url in file_urls:
+            try:
+                url_numerator = url_numerator + 1
+                url = url.strip('\n')
+                r = requests.get(url, timeout=1)
+                file_content = r.text
+                file_result = check_file(url, file_content)
+                result_value.append(file_result)
+                scanwriter.writerow(file_result)
 
-        except Exception as e:  # except KeyError:
-            errors_prints(str(url_numerator) + " " + url)
-            errors_prints("error on scan return value")
-            errors_prints(e)
-            results.write("[{}, \"error_in_scan\"]\n".format(url))
+            except Exception as e:  # except KeyError:
+                errors_prints(str(url_numerator) + " " + url)
+                errors_prints("error on scan return value")
+                errors_prints(e)
+                scanwriter.writerow([url, "error_in_scan"])
+        return result_value
 
 
-def scan_files(file_path, results_file):
+def scan_files(file_path, results_file, single):
     """scanning local files for obfuscation detection"""
     file_numerator = 0
+    result_value = []
     try:
         file_numerator = file_numerator + 1
-        results = open(results_file, 'w')
-        files_list = []
-        results.write('url, ' + 'number_of_js_code_blocks, ' + str(features_collection_signatures_names_header()) + "\n")
-        for filename in os.listdir(file_path):
-            if filename.endswith('.js') or filename.endswith('.txt'):
-                files_list.append(filename)
+        with open(results_file, 'w') as csv_result_file:
+            scanwriter = csv.writer(csv_result_file)
 
-        print(files_list)
-        for file_name in files_list:
-            if os.path.isfile(os.path.join(file_path, file_name)):
-                file_data = open(os.path.join(file_path, file_name), 'r').read()
-                results.write(str(check_file(os.path.join(file_path, file_name), file_data)) + "\n")
+            files_list = []
+            scanwriter.writerow(['url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header())])
+            #single is boolean to distinguish scanning of single file path vs. folder with files being scanned
+            if single and os.path.isfile(file_path):
+                if os.path.isfile(file_path):
+                    files_list.append(os.path.basename(file_path))
+                    file_path = os.path.dirname(file_path)
+                else:
+                    print('The file path specified does not exist')
+            else:
+                if os.path.isdir(file_path):
+                    for filename in os.listdir(file_path):
+                        if filename.endswith('.js') or filename.endswith('.txt'):
+                            files_list.append(filename)
+                else:
+                    print('The folder path specified does not exist')
 
+            print(files_list)
+            for file_name in files_list:
+                if os.path.isfile(os.path.join(file_path, file_name)):
+                    file_data = open(os.path.join(file_path, file_name), 'r').read()
+                    file_result = check_file(os.path.join(file_path, file_name), file_data)
+                    result_value.append(file_result)
+                    scanwriter.writerow(file_result)
+            return result_value
     except Exception as e:  # except KeyError:
         errors_prints(str(file_numerator) + " " + filename)
         errors_prints("error on scan return value")
@@ -184,12 +206,15 @@ def scan_files(file_path, results_file):
 def main(mode, files_scan_path="", results_file=""):
     """Main"""
     if mode == config.MODES_URLS:
-        urls_file_scan(files_scan_path, results_file)
+        return urls_file_scan(files_scan_path, results_file)
     elif mode == config.MODES_LOCAL:
-        scan_files(files_scan_path, results_file)
-    elif mode == config.MODES_SINGLE:
+        return scan_files(files_scan_path, results_file, False)
+    elif mode == config.MODES_LOCAL_SINGLE:
+        print(scan_files(files_scan_path, results_file, True))
+        return scan_files(files_scan_path, results_file, True)
+    elif mode == config.MODES_URL_SINGLE:
         # since the input is single url files_scan_path is being rapped by list
-        urls_scan([files_scan_path], results_file)
+        return urls_scan([files_scan_path], results_file)
     else:
         print("unknown mode!!!")
         exit(0)
@@ -198,17 +223,4 @@ def main(mode, files_scan_path="", results_file=""):
 if __name__ == "__main__":
     args = config.arguments_config()
     logging.basicConfig(filename='error.log', filemode='w',)
-    if args.mode == 'urls_scan':
-        if os.path.exists(args.files):
-            main(args.mode, args.files, args.results)
-        else:
-            print('The file with urls path specified does not exist')
-    elif args.mode == 'local_scan':
-        if os.path.isdir(args.files):
-            main(args.mode, args.files, args.results)
-        else:
-            print('The files path specified does not exist')
-    elif args.mode == 'single_url_scan':
-        main(args.mode, args.files, args.results)
-    else:
-        print("unknown mode type was used")
+    main(args.mode, args.files, args.results)

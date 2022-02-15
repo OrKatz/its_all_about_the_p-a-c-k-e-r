@@ -1,8 +1,9 @@
 import argparse
 
 MODES_LOCAL = 'local_scan'
+MODES_LOCAL_SINGLE = 'single_local_scan'
 MODES_URLS = 'urls_scan'
-MODES_SINGLE = 'single_url_scan'
+MODES_URL_SINGLE = 'single_url_scan'
 DEFAULT_RESULTS_FILE = 'its_all_about_the_packer_results.txt'
 DEFAULT_FILES_SCAN_PATH = '~/'
 LIST_OF_SIGNATURES = ['detect_push_shift_obfuscation_func', 'detect_push_shift_v2_obfuscation_func', 'detect_kaktys_encode', 'detect_munger_packer', 'detect_aes_ctr_decrypt', 'detect_eval_unescape']

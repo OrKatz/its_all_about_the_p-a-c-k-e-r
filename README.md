@@ -7,7 +7,7 @@ In order to test detection use python with the following attributes:
 required named arguments:
 
 --mode M [M ...]     Javascript obfuscator mode is required options are -
-                     local_scan/urls_scan/single_url_scan
+                     local_scan/urls_scan/single_url_scan/single_local_scan
 
 --results R [R ...]  results file path is required
 
