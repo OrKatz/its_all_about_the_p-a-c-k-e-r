@@ -2,9 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from pyjsparser import parse
-import packers_signatures
-import features_collection
-import config
+from js_packers_detection import config, features_collection, packers_signatures
 import sys
 import logging
 

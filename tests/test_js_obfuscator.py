@@ -1,5 +1,5 @@
 import pytest
-import js_obfuscator
+from js_packers_detection import js_obfuscator
 
 
 @pytest.fixture

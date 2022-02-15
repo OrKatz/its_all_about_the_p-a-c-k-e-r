@@ -1,5 +1,5 @@
 import pytest
-import features_collection
+from js_packers_detection import features_collection
 from pyjsparser import parse
 
 @pytest.fixture

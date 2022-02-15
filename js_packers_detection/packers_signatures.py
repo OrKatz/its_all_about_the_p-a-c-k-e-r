@@ -1,6 +1,5 @@
 import dpath.util
-import js_obfuscator
-import config
+from js_packers_detection import js_obfuscator
 
 
 def detect_push_shift_obfuscation_func(parsed_js):

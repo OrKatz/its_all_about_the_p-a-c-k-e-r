@@ -1,5 +1,5 @@
 import pytest
-import packers_signatures
+from js_packers_detection import packers_signatures
 from pyjsparser import parse
 
 @pytest.fixture
