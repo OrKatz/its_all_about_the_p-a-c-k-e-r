@@ -112,7 +112,7 @@ def check_file(url, body):
             if url.endswith(".js"):
                 parsed_js = parse(js_code_block)
             else:
-                parsed_js = parse(features_collection.remove_html_tags(i))
+                parsed_js = parse(features_collection.remove_html_tags(js_code_block))
             #Collect func/var values
             identifiers = features_collection.unique_identifiers(parsed_js)
             #collect Array elements
@@ -174,7 +174,9 @@ def scan_files(file_path, results_file, single):
             files_list = []
             scanwriter.writerow(['url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header())])
             #single is boolean to distinguish scanning of single file path vs. folder with files being scanned
-            if single and os.path.isfile(file_path):
+            if single:
+                print(os.path.dirname(file_path))
+                print(os.path.basename(file_path))
                 if os.path.isfile(file_path):
                     files_list.append(os.path.basename(file_path))
                     file_path = os.path.dirname(file_path)
@@ -210,7 +212,6 @@ def main(mode, files_scan_path="", results_file=""):
     elif mode == config.MODES_LOCAL:
         return scan_files(files_scan_path, results_file, False)
     elif mode == config.MODES_LOCAL_SINGLE:
-        print(scan_files(files_scan_path, results_file, True))
         return scan_files(files_scan_path, results_file, True)
     elif mode == config.MODES_URL_SINGLE:
         # since the input is single url files_scan_path is being rapped by list
