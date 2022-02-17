@@ -53,12 +53,16 @@ def signatures_execution(list_js_features, parsed_js, url):
         pass
 
 
+def func2():
+    setattr(object, "attribute", "the fun things")
+
+
 def features_collection_execution(list_js_features, js_code_block, parsed_js, identifiers, js_var_values):
     """Executing all file features collection def"""
     try:
         for feature_type in config.LIST_OF_FEATURES:
-            for feature_def in eval('config.'+feature_type):
-                feature_value = getattr(features_collection, feature_def)(eval(config.LIST_OF_FEATURES[feature_type]))
+            for feature_def in config.get_config(feature_type):
+                feature_value = getattr(features_collection, feature_def)(eval(config.get_config("LIST_OF_FEATURES")[feature_type]))
                 list_js_features.append(feature_value)
 
         return list_js_features
@@ -73,7 +77,7 @@ def features_collection_signatures_names_header():
     try:
         features_names = []
         for feature_type in config.LIST_OF_FEATURES:
-            for feature_def in eval('config.'+feature_type):
+            for feature_def in config.get_config(feature_type):
                 features_names.append(feature_def)
 
         for signature_name in config.LIST_OF_SIGNATURES:
@@ -175,8 +179,6 @@ def scan_files(file_path, results_file, single):
             scanwriter.writerow(['url', 'number_of_js_code_blocks', str(features_collection_signatures_names_header())])
             #single is boolean to distinguish scanning of single file path vs. folder with files being scanned
             if single:
-                print(os.path.dirname(file_path))
-                print(os.path.basename(file_path))
                 if os.path.isfile(file_path):
                     files_list.append(os.path.basename(file_path))
                     file_path = os.path.dirname(file_path)

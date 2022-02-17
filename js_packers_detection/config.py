@@ -27,3 +27,7 @@ def arguments_config():
     return args
 
 
+#return the config values to dynamic collection of features and signatures
+def get_config(name):
+    return globals()[name]
+
