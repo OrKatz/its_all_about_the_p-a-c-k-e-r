@@ -58,11 +58,15 @@ def func2():
 
 
 def features_collection_execution(list_js_features, js_code_block, parsed_js, identifiers, js_var_values):
-    """Executing all file features collection def"""
+    """Executing all file features collection def. This func will get the list of features and add new collected
+    features/signature to be returned at the end of execution. The other variables the func gets are used and
+    referenced dynamically in the getattr call as local variables. The getattr is executing all collection and
+    signatures functionality by using configuration from config.py. In order to add new signature/feature collection
+    one just need to add functionality code and configuration of the name of that func to config code."""
     try:
         for feature_type in config.LIST_OF_FEATURES:
             for feature_def in config.get_config(feature_type):
-                feature_value = getattr(features_collection, feature_def)(eval(config.get_config("LIST_OF_FEATURES")[feature_type]))
+                feature_value = getattr(features_collection, feature_def)(locals()[config.get_config("LIST_OF_FEATURES")[feature_type]])
                 list_js_features.append(feature_value)
 
         return list_js_features
