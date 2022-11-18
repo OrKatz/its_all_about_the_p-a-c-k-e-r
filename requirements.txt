@@ -1,0 +1,2 @@
+dpath==2.0.6
+pyjsparser==2.7.1
