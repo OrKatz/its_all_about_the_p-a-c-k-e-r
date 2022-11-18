@@ -27,15 +27,16 @@ url,number_of_js_code_blocks,[js_hash, declarations_hash, num_unique_identifiers
 As same file might contains number of javascript blocks, each will have a list of features in output.
 
 Few examples for running the tool:
-Scan folder with many files
+
+Scan folder with many files -
 ```python js_obfuscator.py --mode local_scan --files examples/ --results results.txt```
 
-Scan file contains list of URLs
+Scan file contains list of URLs - 
 ```python js_obfuscator.py --mode urls_scan --files list_urls.txt --results results.txt```
 
-Scan single URL (given as input to tool)
+Scan single URL (given as input to tool) - 
 ```python js_obfuscator.py --mode single_url_scan --files http://malicious.com/ --results results.txt```
 
-Scan single file on disk
+Scan single file on disk - 
 ```python js_obfuscator.py --mode single_local_scan --files exasmples/aes_ctr_example.js --results results.txt```
 
