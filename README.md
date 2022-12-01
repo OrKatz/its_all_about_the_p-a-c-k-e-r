@@ -40,3 +40,8 @@ Scan single URL (given as input to tool) -
 Scan single file on disk - 
 ```python js_obfuscator.py --mode single_local_scan --files exasmples/aes_ctr_example.js --results results.txt```
 
+
+Licensed under the Apache License, Version 2.0 (the "License");
+
+http://www.apache.org/licenses/LICENSE-2.0
+
